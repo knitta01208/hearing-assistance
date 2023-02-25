@@ -57,5 +57,12 @@
     <string>”アプリが音声認識を使用する理由”</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>”アプリがマイクにアクセスする理由”</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>YOUR DESCRIPTION</string>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>audio</string>
+    </array>
 </dict>
 </plist>

@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:audio_streamer/audio_streamer.dart';
 
 List<CameraDescription> cameras = [];
 String _lastWords = "";
+
+final _streamer = AudioStreamer();
+bool _isRecordingAudio = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +31,8 @@ class _MyAppState extends State<MyApp> {
   //音声認識
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
+
+  List<double> buffer = [];
 
   //タイトル名
   static const title = 'アプリのタイトル';
@@ -72,6 +79,7 @@ class _MyAppState extends State<MyApp> {
           _auroraEventOn();
           isAuroraChanged = true;
         } else {
+          _auroraEventOff();
           isAuroraChanged = false;
         }
       }
@@ -106,8 +114,10 @@ class _MyAppState extends State<MyApp> {
 
   //オーロラボタンイベント
   void _auroraEventOn() {
+    //start();
   }
   void _auroraEventOff() {
+    //stop();
   }
   //音声認識ボタンイベント
   void _voiceRecEventOn() {
@@ -152,6 +162,40 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  //音声変換の検証分コメント
+  //void onAudio(List<double> buffer) {
+  //  setState(() {
+  //    this.buffer = buffer;
+  //  });
+  //  debugPrint('buffer');
+  //  debugPrint(buffer.toString());
+  //}
+  //void handleError(PlatformException error) {
+  //  debugPrint('error');
+  //  debugPrint(error.toString());
+  //}
+
+  //void start() async {
+  //  try {
+  //    await _streamer.start(onAudio, handleError);
+  //    setState(() {
+  //      _isRecordingAudio = true;
+  //    });
+  //  } catch (error) {
+  //    debugPrint('catch-error');
+  //    debugPrint(error.toString());
+  //  }
+  //}
+
+  //void stop() async {
+  //  debugPrint('stop');
+  //  await _streamer.stop();
+  //  bool stopped = await _streamer.stop();
+  //  setState(() {
+  //    _isRecordingAudio = stopped;
+  //  });
+  //}
+
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
@@ -189,11 +233,12 @@ class _MyAppState extends State<MyApp> {
                     children: [
                       isAuroraChanged ? Container(
                         width: 250,
-                        height: 100,
-                        color: Colors.blue,
+                        height: 600,
+                        color: Colors.red.withOpacity(0.2),
                         alignment: const Alignment(0.0, 0.0),
                         child: const Text(
-                            labelAurora,
+                            '',
+                            //labelAurora,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -204,7 +249,7 @@ class _MyAppState extends State<MyApp> {
                       isVoiceRecChanged ? Container(
                         width: 250,
                         height: 100,
-                        color: Colors.red,
+                        color: Colors.black,
                         alignment: const Alignment(0.0, 0.0),
                         child: Text(
                           _lastWords,
@@ -215,34 +260,36 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ),
                       ) : Container(),
-                      isSignLangRecChanged ? Container(
-                        width: 250,
-                        height: 100,
-                        color: Colors.green,
-                        alignment: const Alignment(0.0, 0.0),
-                        child: const Text(
-                          labelSignLangRec,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                              color: Colors.white
-                          ),
-                        ),
-                      ) : Container(),
-                      isSignLangKeyboardChanged ? Container(
-                        width: 250,
-                        height: 100,
-                        color: Colors.orange,
-                        alignment: const Alignment(0.0, 0.0),
-                        child: const Text(
-                          labelSignLangKeyboard,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                              color: Colors.white
-                          ),
-                        ),
-                      ) : Container(),
+                      isSignLangRecChanged ? Container() : Container(),
+                      //isSignLangRecChanged ? Container(
+                      //  width: 250,
+                      //  height: 100,
+                      //  color: Colors.green,
+                      //  alignment: const Alignment(0.0, 0.0),
+                      //  child: const Text(
+                      //    labelSignLangRec,
+                      //    style: TextStyle(
+                      //        fontWeight: FontWeight.bold,
+                      //        fontSize: 30,
+                      //        color: Colors.white
+                      //    ),
+                      //  ),
+                      //) : Container(),
+                      isSignLangKeyboardChanged ? Container() : Container(),
+                      //isSignLangKeyboardChanged ? Container(
+                      //  width: 250,
+                      //  height: 100,
+                      //  color: Colors.orange,
+                      //  alignment: const Alignment(0.0, 0.0),
+                      //  child: const Text(
+                      //    labelSignLangKeyboard,
+                      //    style: TextStyle(
+                      //        fontWeight: FontWeight.bold,
+                      //        fontSize: 30,
+                      //        color: Colors.white
+                      //    ),
+                      //  ),
+                      //) : Container(),
                     ],
                 ),
               ),
